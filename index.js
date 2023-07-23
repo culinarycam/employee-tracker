@@ -5,28 +5,26 @@ const prompt = inquirer.createPromptModule();
 
 let db;
 
+const getAll = (tableName) => {
+    db.query('SELECT * FROM ?', tableName, (err, results) => {
+        console.table(results);
+        init();
+    });
+    };
+
 const handleAction = ({ action }) => {
     console.log(`ACTION ${action}`);
     switch(action) {
         case 'View All Employees': {
-          db.query('SELECT * FROM employees', (err, employees) => {
-            console.table(employees);
-            init();
-          });
+      getAll('employees');
             break;
         }
         case 'View All Departments': {
-          db.query('SELECT * FROM departments', (err, departments) => {
-            console.table(departments);
-            init();
-          });
+      getAll('departments');
           break;
         }
         case 'View All Roles': {
-            db.query('SELECT * FROM roles', (err, roles) => {
-                console.table(roles);
-                init();
-            });
+          getAll('roles');
             break;
         }
         default: {
