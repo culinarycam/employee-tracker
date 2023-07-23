@@ -6,8 +6,18 @@ const prompt = inquirer.createPromptModule();
 let db;
 
 const getAll = (tableName) => {
-    db.query('SELECT * FROM ?', tableName, (err, results) => {
+    db.query('SELECT * FROM ??', tableName, (err, results) => {
+        if (err) {
+            return console.error(err)
+        }
         console.table(results);
+        init();
+    });
+    };
+
+const insertEmployee = (data) => {
+    db.query('INSERT INTO employees SET ?', data, (err, result) => {
+        console.log('Add Employee');
         init();
     });
     };
@@ -27,6 +37,18 @@ const handleAction = ({ action }) => {
           getAll('roles');
             break;
         }
+        case 'Add Employee': {
+            prompt([
+                {
+                    message: 'Enter first name',
+                    name: 'first_name',
+                },
+                {
+                    message: 'Enter last name',
+                    name: 'last_name',
+                },
+            ]).then(insertEmployee);
+        }
         default: {
             process.exit();
         }
@@ -42,6 +64,8 @@ const init = () => {
             'View All Employees',
             'View All Departments',
             'View All Roles',
+            'Add Employee',
+            'Exit',
         ]
     }).then(handleAction);
 };
